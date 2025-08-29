@@ -1,16 +1,28 @@
-todos= []
+# todo_app.py
 
 while True:
     user_choice = input("Type add, show, edit, complite, or exit to quit: ")
     match user_choice:
         case "add":
-            todo = input("Enter a todo: ")
-            todo = todo.strip()
+            todo = input("Enter a todo: ") + "\n"
+
+            file = open("todos.txt", "r")
+            todos = file.readlines()
+            file.close()
+
             todos.append(todo)
+
+            file = open("todos.txt", "w")
+            file.writelines(todos)
+            file.close()
+
         case "show":
+            file = open("todos.txt", "r")
+            todos = file.readlines()
+            file.close()
             for index , item in enumerate(todos):
-                item = item.title()
-                print(f"{index + 1}-{item}")
+                item = item.strip().title()
+                print(f"{index + 1} - {item}")
         case "edit":
             number = int(input("Enter the number of the todo to edit: \n"))
             if 0 < number <= len(todos):

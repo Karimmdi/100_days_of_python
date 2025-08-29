@@ -1,0 +1,4 @@
+clean
+wash
+take
+throw garbage
