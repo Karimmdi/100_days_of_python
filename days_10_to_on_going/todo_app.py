@@ -1,48 +1,68 @@
 # todo_app.py
+import os
 
 while True:
-    user_choice = input("Type add, show, edit, complite, or exit to quit: ")
+    user_choice = input("Type add, show, edit, complete, or exit: ").strip().lower()
+
     match user_choice:
         case "add":
             todo = input("Enter a todo: ") + "\n"
 
-            file = open("todos.txt", "r")
-            todos = file.readlines()
-            file.close()
+            if not os.path.exists("todos.txt"):
+                with open("todos.txt", "w") as file:
+                    pass  # create empty file
+
+            with open("todos.txt", "r") as file:
+                todos = file.readlines()
 
             todos.append(todo)
 
-            file = open("todos.txt", "w")
-            file.writelines(todos)
-            file.close()
+            with open("todos.txt", "w") as file:
+                file.writelines(todos)
 
         case "show":
-            file = open("todos.txt", "r")
-            todos = file.readlines()
-            file.close()
-            for index , item in enumerate(todos):
-                item = item.strip().title()
-                print(f"{index + 1} - {item}")
+            with open("todos.txt", "r") as file:
+                todos = file.readlines()
+
+            if not todos:
+                print("No todos yet!")
+            else:
+                for index, item in enumerate(todos, start=1):
+                    item = item.strip().title()
+                    print(f"{index}. {item}")
+
         case "edit":
-            number = int(input("Enter the number of the todo to edit: \n"))
+            with open("todos.txt", "r") as file:
+                todos = file.readlines()
+
+            number = int(input("Enter the number of the todo to edit: "))
             if 0 < number <= len(todos):
-                number = number - 1
+                new_todo = input("Enter the new todo: ").strip() + "\n"
+                todos[number - 1] = new_todo
 
-                new_todo = input("Enter the new todo: ")
-
-                todos[number] = new_todo.strip()
+                with open("todos.txt", "w") as file:
+                    file.writelines(todos)
             else:
                 print("Invalid todo number.")
-        case "complite":
-            number = int(input("Enter the number of the todo to complite: \n"))
+
+        case "complete":
+            with open("todos.txt", "r") as file:
+                todos = file.readlines()
+
+            number = int(input("Enter the number of the todo to complete: "))
             if 0 < number <= len(todos):
-                todos.pop(number - 1)
+                removed = todos.pop(number - 1)
+
+                with open("todos.txt", "w") as file:
+                    file.writelines(todos)
+
+                print(f"Todo '{removed.strip()}' completed and removed!")
+            else:
+                print("Invalid todo number.")
 
         case "exit":
+            print("Goodbye 👋")
             break
+
         case _:
             print("Invalid choice, please try again.")
-
-
-
-

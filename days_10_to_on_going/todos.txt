@@ -1,4 +1,2 @@
 clean
-wash
-take
-throw garbage
+throw
